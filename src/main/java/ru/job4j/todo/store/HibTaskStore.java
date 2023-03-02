@@ -87,4 +87,24 @@ public class HibTaskStore implements TaskStore{
         session.close();
         return result;
     }
+
+    @Override
+    public Collection<Task> findAllActiveTasks() {
+        Session session = sf.openSession();
+        session.beginTransaction();
+        List<Task> result = session.createQuery("from Task WHERE done is false ORDER BY id", Task.class).list();
+        session.getTransaction().commit();
+        session.close();
+        return result;
+    }
+
+    @Override
+    public Collection<Task> findAllCompletedTasks() {
+        Session session = sf.openSession();
+        session.beginTransaction();
+        List<Task> result = session.createQuery("from Task WHERE done is true ORDER BY id", Task.class).list();
+        session.getTransaction().commit();
+        session.close();
+        return result;
+    }
 }

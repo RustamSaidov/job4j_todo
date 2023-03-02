@@ -44,4 +44,14 @@ public class SimpleTaskService implements TaskService{
     public Collection<Task> findAll() {
         return taskStore.findAll();
     }
+
+    @Override
+    public Collection<Task> findAllActiveTasks() {
+        return taskStore.findAllActiveTasks();
+    }
+
+    @Override
+    public Collection<Task> findAllCompletedTasks() {
+        return taskStore.findAllCompletedTasks();
+    }
 }
