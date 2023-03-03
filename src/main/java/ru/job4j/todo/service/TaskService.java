@@ -19,4 +19,6 @@ public interface TaskService {
     Collection<Task> findAllActiveTasks();
 
     Collection<Task> findAllCompletedTasks();
+
+    void executed(int id);
 }

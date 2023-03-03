@@ -20,4 +20,6 @@ public interface TaskStore {
     Collection<Task> findAllActiveTasks();
 
     Collection<Task> findAllCompletedTasks();
+
+    void executed(int id);
 }

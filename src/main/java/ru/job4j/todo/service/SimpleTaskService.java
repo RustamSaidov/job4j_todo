@@ -54,4 +54,9 @@ public class SimpleTaskService implements TaskService{
     public Collection<Task> findAllCompletedTasks() {
         return taskStore.findAllCompletedTasks();
     }
+
+    @Override
+    public void executed(int id) {
+        taskStore.executed(id);
+    }
 }

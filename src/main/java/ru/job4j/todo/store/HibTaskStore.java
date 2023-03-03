@@ -60,7 +60,7 @@ public class HibTaskStore implements TaskStore{
                     .setParameter("description", task.getDescription())
                     .setParameter("created", task.getCreated())
                     .setParameter("done", task.isDone())
-                    .setParameter("fId", task.getId())
+                    .setParameter("id", task.getId())
                     .executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -106,5 +106,28 @@ public class HibTaskStore implements TaskStore{
         session.getTransaction().commit();
         session.close();
         return result;
+    }
+
+    @Override
+    public void executed(int id) {
+        Session session = sf.openSession();
+        Task task = findById(id).get();
+        try {
+            session.beginTransaction();
+            session.createQuery("""
+                    UPDATE Task
+                    SET description = :description, created = :created,
+                        done = :done
+                    WHERE id = :id
+                    """)
+                    .setParameter("description", task.getDescription())
+                    .setParameter("created", task.getCreated())
+                    .setParameter("done", true)
+                    .setParameter("id", task.getId())
+                    .executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        }
     }
 }

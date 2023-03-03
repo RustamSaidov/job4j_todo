@@ -2,9 +2,9 @@ package ru.job4j.todo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 import net.jcip.annotations.ThreadSafe;
 
@@ -48,5 +48,40 @@ public class TaskController {
         }
         model.addAttribute("task", taskOptional.get());
         return "tasks/one";
+    }
+
+    @GetMapping("/update_task/{id}")
+    public String updateById(Model model, @PathVariable int id) {
+        var taskOptional = taskService.findById(id);
+        if (taskOptional.isEmpty()) {
+            model.addAttribute("message", "Задание с указанным идентификатором не найдено");
+            return "errors/404";
+        }
+        model.addAttribute("task", taskOptional.get());
+        return "redirect:/tasks";
+//        return "tasks/update_task";
+    }
+
+    @PostMapping("/update_task")
+    public String update(@ModelAttribute Task task, Model model) {
+        try {
+            taskService.update(task);
+            return "redirect:/tasks";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/404";
+        }
+    }
+
+    @PostMapping("/execute_task/{id}")
+    public String makeTaskExecuted(Model model, @PathVariable int id) {
+        try {
+            System.out.println(taskService.findById(id));
+            taskService.executed(id);
+            return "redirect:/tasks";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/404";
+        }
     }
 }
