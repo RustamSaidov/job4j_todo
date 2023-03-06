@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class HibTaskStore implements TaskStore{
+public class HibTaskRepository implements TaskRepository {
     private final SessionFactory sf;
 
 
@@ -52,11 +52,11 @@ public class HibTaskStore implements TaskStore{
         try {
             session.beginTransaction();
             session.createQuery("""
-                    UPDATE Task
-                    SET description = :description, created = :created,
-                        done = :done
-                    WHERE id = :id
-                    """)
+                            UPDATE Task
+                            SET description = :description, created = :created,
+                                done = :done
+                            WHERE id = :id
+                            """)
                     .setParameter("description", task.getDescription())
                     .setParameter("created", task.getCreated())
                     .setParameter("done", task.isDone())
@@ -109,17 +109,17 @@ public class HibTaskStore implements TaskStore{
     }
 
     @Override
-    public void executed(int id) {
+    public void setTaskExecutedById(int id) {
         Session session = sf.openSession();
         Task task = findById(id).get();
         try {
             session.beginTransaction();
             session.createQuery("""
-                    UPDATE Task
-                    SET description = :description, created = :created,
-                        done = :done
-                    WHERE id = :id
-                    """)
+                            UPDATE Task
+                            SET description = :description, created = :created,
+                                done = :done
+                            WHERE id = :id
+                            """)
                     .setParameter("description", task.getDescription())
                     .setParameter("created", task.getCreated())
                     .setParameter("done", true)

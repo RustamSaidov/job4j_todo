@@ -5,7 +5,7 @@ import ru.job4j.todo.model.Task;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface TaskStore {
+public interface TaskRepository {
 
     Task save(Task task);
 
@@ -21,5 +21,5 @@ public interface TaskStore {
 
     Collection<Task> findAllCompletedTasks();
 
-    void executed(int id);
+    void setTaskExecutedById(int id);
 }

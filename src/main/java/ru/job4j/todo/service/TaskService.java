@@ -20,5 +20,5 @@ public interface TaskService {
 
     Collection<Task> findAllCompletedTasks();
 
-    void executed(int id);
+    void setTaskExecutedById(int id);
 }

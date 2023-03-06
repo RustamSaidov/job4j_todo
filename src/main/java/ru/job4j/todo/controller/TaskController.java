@@ -1,13 +1,11 @@
 package ru.job4j.todo.controller;
 
+import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
-import net.jcip.annotations.ThreadSafe;
-
 
 
 @ThreadSafe
@@ -58,8 +56,8 @@ public class TaskController {
             return "errors/404";
         }
         model.addAttribute("task", taskOptional.get());
-        return "redirect:/tasks";
-//        return "tasks/update_task";
+//        return "redirect:/tasks";
+        return "tasks/update_task";
     }
 
     @PostMapping("/update_task")
@@ -73,11 +71,37 @@ public class TaskController {
         }
     }
 
-    @PostMapping("/execute_task/{id}")
-    public String makeTaskExecuted(Model model, @PathVariable int id) {
+    @PostMapping("/execute_task")
+    public String makeTaskExecuted(@ModelAttribute Task task, Model model) {
         try {
-            System.out.println(taskService.findById(id));
-            taskService.executed(id);
+            taskService.setTaskExecutedById(task.getId());
+            return "redirect:/tasks";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/404";
+        }
+    }
+
+    @PostMapping("/delete_task")
+    public String deleteTask(@ModelAttribute Task task, Model model) {
+        try {
+            taskService.deleteById(task.getId());
+            return "redirect:/tasks";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/404";
+        }
+    }
+
+    @GetMapping("/create")
+    public String getCreationPage(Model model) {
+        return "tasks/create";
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute Task task, Model model) {
+        try {
+            taskService.save(task);
             return "redirect:/tasks";
         } catch (Exception exception) {
             model.addAttribute("message", exception.getMessage());
