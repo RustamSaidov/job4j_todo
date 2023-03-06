@@ -10,12 +10,6 @@ import java.util.Objects;
 @Table(name = "tasks")
 @Data
 public class Task {
-//    public static final Map<String, String> COLUMN_MAPPING = Map.of(
-//            "id", "id",
-//            "description", "description",
-//            "created", "created",
-//            "done", "done"
-//    );
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
