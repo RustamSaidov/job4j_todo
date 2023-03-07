@@ -14,11 +14,4 @@ public class Main {
         SpringApplication.run(Main.class, args);
 
     }
-
-    @Bean(destroyMethod = "close")
-    public SessionFactory sf() {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure().build();
-        return new MetadataSources(registry).buildMetadata().buildSessionFactory();
-    }
 }

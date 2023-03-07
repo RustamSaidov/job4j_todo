@@ -46,13 +46,8 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Collection<Task> findAllActiveTasks() {
-        return taskRepository.findAllActiveTasks();
-    }
-
-    @Override
-    public Collection<Task> findAllCompletedTasks() {
-        return taskRepository.findAllCompletedTasks();
+    public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
+        return taskRepository.findAllTasksByExecutingStatus(flag);
     }
 
     @Override

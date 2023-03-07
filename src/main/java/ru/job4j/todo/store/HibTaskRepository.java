@@ -31,27 +31,29 @@ public class HibTaskRepository implements TaskRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public boolean deleteById(int id) {
         Session session = sf.openSession();
+        int result=0;
         try {
             session.beginTransaction();
-            session.createQuery(
+            result = session.createQuery(
                             "DELETE Task WHERE id = :fId")
-                    .setParameter("fId", id)
-                    .executeUpdate();
+                    .setParameter("fId", id).executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         }
         session.close();
+        return result > 0;
     }
 
     @Override
-    public void update(Task task) {
+    public boolean update(Task task) {
         Session session = sf.openSession();
+        int result=0;
         try {
             session.beginTransaction();
-            session.createQuery("""
+            result = session.createQuery("""
                             UPDATE Task
                             SET description = :description, created = :created,
                                 done = :done
@@ -66,6 +68,7 @@ public class HibTaskRepository implements TaskRepository {
         } catch (Exception e) {
             session.getTransaction().rollback();
         }
+        return result > 0;
     }
 
     @Override
@@ -88,46 +91,35 @@ public class HibTaskRepository implements TaskRepository {
         return result;
     }
 
-    @Override
-    public Collection<Task> findAllActiveTasks() {
+        @Override
+    public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
         Session session = sf.openSession();
         session.beginTransaction();
-        List<Task> result = session.createQuery("from Task WHERE done is false ORDER BY id", Task.class).list();
+        String query = String.format("from Task WHERE done is %s ORDER BY id", flag);
+        List<Task> result = session.createQuery(query, Task.class).list();
         session.getTransaction().commit();
         session.close();
         return result;
     }
 
     @Override
-    public Collection<Task> findAllCompletedTasks() {
+    public boolean setTaskExecutedById(int id) {
         Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> result = session.createQuery("from Task WHERE done is true ORDER BY id", Task.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
-    }
-
-    @Override
-    public void setTaskExecutedById(int id) {
-        Session session = sf.openSession();
-        Task task = findById(id).get();
+        int result=0;
         try {
             session.beginTransaction();
-            session.createQuery("""
+            result = session.createQuery("""
                             UPDATE Task
-                            SET description = :description, created = :created,
-                                done = :done
+                            SET done = :done
                             WHERE id = :id
                             """)
-                    .setParameter("description", task.getDescription())
-                    .setParameter("created", task.getCreated())
                     .setParameter("done", true)
-                    .setParameter("id", task.getId())
+                    .setParameter("id", id)
                     .executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         }
+        return result > 0;
     }
 }

@@ -25,16 +25,16 @@ public class TaskController {
         return "tasks/list";
     }
 
-    @GetMapping("/active_tasks")
+    @GetMapping("/active")
     public String getActiveTasks(Model model) {
-        model.addAttribute("active_tasks", taskService.findAllActiveTasks());
-        return "tasks/active_tasks";
+        model.addAttribute("active", taskService.findAllTasksByExecutingStatus(false));
+        return "tasks/active";
     }
 
-    @GetMapping("/completed_tasks")
+    @GetMapping("/completed")
     public String getCompletedTasks(Model model) {
-        model.addAttribute("completed_tasks", taskService.findAllCompletedTasks());
-        return "tasks/completed_tasks";
+        model.addAttribute("completed", taskService.findAllTasksByExecutingStatus(true));
+        return "tasks/completed";
     }
 
     @GetMapping("/{id}")

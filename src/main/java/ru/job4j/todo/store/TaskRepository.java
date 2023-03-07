@@ -9,17 +9,15 @@ public interface TaskRepository {
 
     Task save(Task task);
 
-    void deleteById(int id);
+    boolean deleteById(int id);
 
-    void update(Task task);
+    boolean update(Task task);
 
     Optional<Task> findById(int id);
 
     Collection<Task> findAll();
 
-    Collection<Task> findAllActiveTasks();
+    Collection<Task> findAllTasksByExecutingStatus(boolean flag);
 
-    Collection<Task> findAllCompletedTasks();
-
-    void setTaskExecutedById(int id);
+    boolean setTaskExecutedById(int id);
 }
