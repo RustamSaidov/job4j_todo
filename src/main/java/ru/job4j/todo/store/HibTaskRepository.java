@@ -33,7 +33,7 @@ public class HibTaskRepository implements TaskRepository {
     @Override
     public boolean deleteById(int id) {
         Session session = sf.openSession();
-        int result=0;
+        int result = 0;
         try {
             session.beginTransaction();
             result = session.createQuery(
@@ -50,7 +50,7 @@ public class HibTaskRepository implements TaskRepository {
     @Override
     public boolean update(Task task) {
         Session session = sf.openSession();
-        int result=0;
+        int result = 0;
         try {
             session.beginTransaction();
             result = session.createQuery("""
@@ -74,11 +74,20 @@ public class HibTaskRepository implements TaskRepository {
     @Override
     public Optional<Task> findById(int id) {
         Session session = sf.openSession();
-        session.beginTransaction();
-        Task result = session.get(Task.class, id);
-        session.getTransaction().commit();
-        session.close();
-        return Optional.ofNullable(result);
+        Optional<Task> result = Optional.empty();
+        try {
+            session.beginTransaction();
+            result = session.createQuery("""
+                            from Task
+                            WHERE id = :id
+                            """)
+                    .setParameter("id", id)
+                    .uniqueResultOptional();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        }
+        return result;
     }
 
     @Override
@@ -91,7 +100,7 @@ public class HibTaskRepository implements TaskRepository {
         return result;
     }
 
-        @Override
+    @Override
     public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
         Session session = sf.openSession();
         session.beginTransaction();
@@ -105,7 +114,7 @@ public class HibTaskRepository implements TaskRepository {
     @Override
     public boolean setTaskExecutedById(int id) {
         Session session = sf.openSession();
-        int result=0;
+        int result = 0;
         try {
             session.beginTransaction();
             result = session.createQuery("""

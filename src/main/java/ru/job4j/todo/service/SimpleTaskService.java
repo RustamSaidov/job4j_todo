@@ -7,6 +7,7 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.store.TaskRepository;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ThreadSafe
@@ -27,12 +28,18 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public void deleteById(int id) {
-        taskRepository.deleteById(id);
+        boolean result = taskRepository.deleteById(id);
+        if (!result) {
+            throw new NoSuchElementException("Task with this id is not found");
+        }
     }
 
     @Override
     public void update(Task task) {
-        taskRepository.update(task);
+        boolean result = taskRepository.update(task);
+        if (!result) {
+            throw new NoSuchElementException("Task with this id is not found");
+        }
     }
 
     @Override
@@ -53,5 +60,9 @@ public class SimpleTaskService implements TaskService {
     @Override
     public void setTaskExecutedById(int id) {
         taskRepository.setTaskExecutedById(id);
+        boolean result = taskRepository.setTaskExecutedById(id);
+        if (!result) {
+            throw new NoSuchElementException("Task with this id is not found");
+        }
     }
 }
