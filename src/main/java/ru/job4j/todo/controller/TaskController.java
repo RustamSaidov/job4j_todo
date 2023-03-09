@@ -56,7 +56,6 @@ public class TaskController {
             return "errors/404";
         }
         model.addAttribute("task", taskOptional.get());
-//        return "redirect:/tasks";
         return "tasks/update_task";
     }
 
