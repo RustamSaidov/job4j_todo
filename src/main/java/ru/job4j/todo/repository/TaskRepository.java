@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface TaskRepository {
 
-    Task save(Task task);
+    Optional<Task> save(Task task);
 
     boolean deleteById(int id);
 
@@ -15,7 +15,7 @@ public interface TaskRepository {
 
     Optional<Task> findById(int id);
 
-    Collection<Task> findAll();
+    Collection<Task> findAllOrderById();
 
     Collection<Task> findAllTasksByExecutingStatus(boolean flag);
 

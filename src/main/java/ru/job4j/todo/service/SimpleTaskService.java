@@ -23,7 +23,11 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public Task save(Task task) {
-        return taskRepository.save(task);
+        Optional<Task> result = taskRepository.save(task);
+        if (result.isEmpty()) {
+            throw new NoSuchElementException("Task does not saved");
+        }
+        return result.get();
     }
 
     @Override
@@ -49,7 +53,7 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public Collection<Task> findAll() {
-        return taskRepository.findAll();
+        return taskRepository.findAllOrderById();
     }
 
     @Override

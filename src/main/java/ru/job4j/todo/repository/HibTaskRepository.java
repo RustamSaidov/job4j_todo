@@ -1,134 +1,121 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
 public class HibTaskRepository implements TaskRepository {
-    private final SessionFactory sf;
+    private final CrudRepository crudRepository;
 
-
-    @Override
-    public Task save(Task task) {
-        Session session = sf.openSession();
+    /**
+     * Сохранить в базе.
+     *
+     * @param task пользователь.
+     * @return Optional of task.
+     */
+    public Optional<Task> save(Task task) {
         try {
-            session.beginTransaction();
-            session.save(task);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            crudRepository.run(session -> session.persist(task));
+        } catch (Exception exception) {
+            return Optional.empty();
         }
-        session.close();
-        return task;
+        return Optional.ofNullable(task);
     }
 
-    @Override
-    public boolean deleteById(int id) {
-        Session session = sf.openSession();
-        int result = 0;
+    /**
+     * Удалить пользователя по id.
+     *
+     * @return boolean.
+     */
+    public boolean deleteById(int taskId) {
         try {
-            session.beginTransaction();
-            result = session.createQuery(
-                            "DELETE Task WHERE id = :fId")
-                    .setParameter("fId", id).executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            crudRepository.run(
+                    "delete from Task where id = :fId",
+                    Map.of("fId", taskId));
+        } catch (Exception exception) {
+            return false;
         }
-        session.close();
-        return result > 0;
+        return true;
     }
 
-    @Override
+    /**
+     * Обновить в базе пользователя.
+     *
+     * @param task пользователь.
+     * @return boolean.
+     */
     public boolean update(Task task) {
-        Session session = sf.openSession();
-        int result = 0;
         try {
-            session.beginTransaction();
-            result = session.createQuery("""
-                            UPDATE Task
-                            SET description = :description, created = :created,
-                                done = :done
-                            WHERE id = :id
-                            """)
-                    .setParameter("description", task.getDescription())
-                    .setParameter("created", task.getCreated())
-                    .setParameter("done", task.isDone())
-                    .setParameter("id", task.getId())
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            crudRepository.run(session -> session.merge(task));
+        } catch (Exception exception) {
+            return false;
         }
-        return result > 0;
+        return true;
     }
 
+    /**
+     * Найти пользователя по id.
+     *
+     * @param id ID.
+     * @return Optional of user.
+     */
     @Override
     public Optional<Task> findById(int id) {
-        Session session = sf.openSession();
-        Optional result = Optional.empty();
+        Optional<Task> result = Optional.empty();
         try {
-            session.beginTransaction();
-            result = session.createQuery("""
-                            from Task
-                            WHERE id = :id
-                            """)
-                    .setParameter("id", id)
-                    .uniqueResultOptional();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            result = crudRepository.optional("""
+                             from Task as t WHERE t.id = :fId
+                            """, Task.class,
+                    Map.of("fId", id));
+        } catch (Exception exception) {
+            return result;
         }
         return result;
     }
 
+    /**
+     * Список пользователь отсортированных по id.
+     *
+     * @return список пользователей.
+     */
     @Override
-    public Collection<Task> findAll() {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        List<Task> result = session.createQuery("from Task ORDER BY id", Task.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+    public Collection<Task> findAllOrderById() {
+        return crudRepository.query("from Task order by id asc", Task.class);
     }
 
+    /**
+     * Список активных/выполненных задач.
+     *
+     * @param flag флаг.
+     * @return список задач.
+     */
     @Override
     public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
-        Session session = sf.openSession();
-        session.beginTransaction();
-        String query = String.format("from Task WHERE done is %s ORDER BY id", flag);
-        List<Task> result = session.createQuery(query, Task.class).list();
-        session.getTransaction().commit();
-        session.close();
-        return result;
+        return crudRepository.query(String.format("from Task WHERE done is %s ORDER BY id", flag), Task.class);
     }
 
+    /**
+     * Обновить в базе пользователя.
+     *
+     * @param id ID.
+     * @return boolean.
+     */
     @Override
     public boolean setTaskExecutedById(int id) {
-        Session session = sf.openSession();
-        int result = 0;
+
         try {
-            session.beginTransaction();
-            result = session.createQuery("""
-                            UPDATE Task
-                            SET done = :done
-                            WHERE id = :id
-                            """)
-                    .setParameter("done", true)
-                    .setParameter("id", id)
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
+            crudRepository.run(
+                    "UPDATE Task SET done = :fDone where id = :fId",
+                    Map.of("fId", id, "fDone", true));
+        } catch (Exception exception) {
+            return false;
         }
-        return result > 0;
+        return true;
     }
 }
