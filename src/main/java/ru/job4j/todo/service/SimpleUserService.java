@@ -21,11 +21,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public Optional<User> save(User user) {
-        var savedUser = userRepository.save(user);
-        if (savedUser.isEmpty()) {
-            throw new NoSuchElementException("Пользователь с таким почтовым адресом уже существует");
-        }
-        return savedUser;
+        return userRepository.save(user);
     }
 
     public Optional<User> findByEmailAndPassword(String email, String password) {

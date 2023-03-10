@@ -30,13 +30,12 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(Model model, @ModelAttribute User user) {
-        try {
-            userService.save(user);
-            return "redirect:/tasks";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
+        var savedUser = userService.save(user);
+        if (savedUser.isEmpty()) {
+            model.addAttribute("message", "Пользователь с таким почтовым адресом уже существует1234567");
             return "errors/404";
         }
+        return "redirect:/tasks";
     }
 
     @GetMapping("/login")
