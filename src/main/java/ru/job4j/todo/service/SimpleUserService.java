@@ -15,20 +15,17 @@ public class SimpleUserService implements UserService {
 
     private final UserRepository userRepository;
 
-    public SimpleUserService(UserRepository HibUserRepository) {
-        this.userRepository = HibUserRepository;
+    public SimpleUserService(UserRepository hibUserRepository) {
+        this.userRepository = hibUserRepository;
     }
 
     @Override
-    public User save(User user) {
-        return userRepository.save(user);
-
-
-//        var savedUser = userRepository.save(user);
-//        if (savedUser ==null) {
-//            throw new NoSuchElementException("Пользователь с таким почтовым адресом уже существует");
-//        }
-//        return savedUser;
+    public Optional<User> save(User user) {
+        var savedUser = userRepository.save(user);
+        if (savedUser.isEmpty()) {
+            throw new NoSuchElementException("Пользователь с таким почтовым адресом уже существует");
+        }
+        return savedUser;
     }
 
     public Optional<User> findByEmailAndPassword(String email, String password) {

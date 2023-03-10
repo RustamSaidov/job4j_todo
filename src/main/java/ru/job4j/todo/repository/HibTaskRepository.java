@@ -74,7 +74,7 @@ public class HibTaskRepository implements TaskRepository {
     @Override
     public Optional<Task> findById(int id) {
         Session session = sf.openSession();
-        Optional<Task> result = Optional.empty();
+        Optional result = Optional.empty();
         try {
             session.beginTransaction();
             result = session.createQuery("""
