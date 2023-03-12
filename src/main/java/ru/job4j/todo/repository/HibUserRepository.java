@@ -48,4 +48,24 @@ public class HibUserRepository implements UserRepository {
         }
         return result;
     }
+
+    /**
+     * Найти пользователя по id.
+     *
+     * @param id ID.
+     * @return Optional of user.
+     */
+    @Override
+    public Optional<User> findById(int id) {
+        Optional<User> result = Optional.empty();
+        try {
+            result = crudRepository.optional("""
+                             from User as u WHERE u.id = :fId
+                            """, User.class,
+                    Map.of("fId", id));
+        } catch (Exception exception) {
+            return result;
+        }
+        return result;
+    }
 }

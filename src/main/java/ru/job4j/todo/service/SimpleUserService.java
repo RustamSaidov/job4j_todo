@@ -31,4 +31,9 @@ public class SimpleUserService implements UserService {
         }
         return foundedUser;
     }
+
+    @Override
+    public Optional<User> findById(int id) {
+        return userRepository.findById(id);
+    }
 }

@@ -4,6 +4,7 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.dto.TaskDTO;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
@@ -21,7 +22,7 @@ public class TaskController {
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("tasks", taskService.findAll());
+        model.addAttribute("tasksDTO", taskService.findAll());
         return "tasks/list";
     }
 

@@ -16,7 +16,7 @@ public class HibTaskRepository implements TaskRepository {
     /**
      * Сохранить в базе.
      *
-     * @param task пользователь.
+     * @param task задание.
      * @return Optional of task.
      */
     public Optional<Task> save(Task task) {
@@ -29,7 +29,7 @@ public class HibTaskRepository implements TaskRepository {
     }
 
     /**
-     * Удалить пользователя по id.
+     * Удалить задание по id.
      *
      * @return boolean.
      */
@@ -45,9 +45,9 @@ public class HibTaskRepository implements TaskRepository {
     }
 
     /**
-     * Обновить в базе пользователя.
+     * Обновить в базе задание.
      *
-     * @param task пользователь.
+     * @param task задание.
      * @return boolean.
      */
     public boolean update(Task task) {
@@ -60,10 +60,10 @@ public class HibTaskRepository implements TaskRepository {
     }
 
     /**
-     * Найти пользователя по id.
+     * Найти задание по id.
      *
      * @param id ID.
-     * @return Optional of user.
+     * @return Optional of task.
      */
     @Override
     public Optional<Task> findById(int id) {
@@ -80,9 +80,9 @@ public class HibTaskRepository implements TaskRepository {
     }
 
     /**
-     * Список пользователь отсортированных по id.
+     * Список заданий отсортированных по id.
      *
-     * @return список пользователей.
+     * @return список заданий.
      */
     @Override
     public Collection<Task> findAllOrderById() {
@@ -101,7 +101,7 @@ public class HibTaskRepository implements TaskRepository {
     }
 
     /**
-     * Обновить в базе пользователя.
+     * Обновить в базе задание.
      *
      * @param id ID.
      * @return boolean.

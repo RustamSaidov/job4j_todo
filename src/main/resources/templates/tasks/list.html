@@ -49,10 +49,11 @@
                     <th scope="col">#</th>
                     <th scope="col">Описание</th>
                     <th scope="col">Дата создания</th>
+                    <th scope="col">Создатель задания</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="task: ${tasks}">
+                <tr th:each="task: ${tasksDTO}">
                     <td>
                         <span th:if="${task.done}">
                             <i class="bi bi-check-square"></i>
@@ -65,6 +66,8 @@
                     <td><a th:text="${task.description}"
                            th:href="@{/tasks/{taskId}(taskId=${task.id})}"></a></td>
                     <td th:text="${task.created}"/>
+                    <td th:text="${task.userName}"/>
+
                 </tr>
                 </tbody>
             </table>
