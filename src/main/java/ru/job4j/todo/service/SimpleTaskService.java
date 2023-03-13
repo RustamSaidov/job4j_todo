@@ -3,11 +3,13 @@ package ru.job4j.todo.service;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
-import ru.job4j.todo.dto.TaskDTO;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @ThreadSafe
 @Service
@@ -24,7 +26,6 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public Task save(Task task) {
-        Task task = new Task(taskDTO.getId(), taskDTO.getDescription(), taskDTO.getCreated(), taskDTO.isDone(), taskDTO.);
         Optional<Task> result = taskRepository.save(task);
         if (result.isEmpty()) {
             throw new NoSuchElementException("Task does not saved");
@@ -54,15 +55,9 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Collection<TaskDTO> findAll() {
+    public Collection<Task> findAll() {
         List<Task> tasks = (List<Task>) taskRepository.findAllOrderById();
-        List<TaskDTO> listOfTaskDTO = new ArrayList<>();
-        for (int i = 0; i < tasks.size(); i++) {
-            listOfTaskDTO.add(new TaskDTO(tasks.get(i).getId(),
-                    tasks.get(i).getDescription(),
-                    tasks.get(i).getCreated(), tasks.get(i).isDone(), userService.findById(tasks.get(i).getUser().getId()).get().getName()));
-        }
-        return listOfTaskDTO;
+        return tasks;
     }
 
     @Override

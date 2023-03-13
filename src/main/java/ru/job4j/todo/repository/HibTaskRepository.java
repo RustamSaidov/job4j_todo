@@ -20,6 +20,7 @@ public class HibTaskRepository implements TaskRepository {
      * @return Optional of task.
      */
     public Optional<Task> save(Task task) {
+        System.out.println("REPO TASK: " + task);
         try {
             crudRepository.run(session -> session.persist(task));
         } catch (Exception exception) {
@@ -108,7 +109,6 @@ public class HibTaskRepository implements TaskRepository {
      */
     @Override
     public boolean setTaskExecutedById(int id) {
-
         try {
             crudRepository.run(
                     "UPDATE Task SET done = :fDone where id = :fId",

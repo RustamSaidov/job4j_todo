@@ -4,9 +4,9 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.job4j.todo.dto.TaskDTO;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
+import ru.job4j.todo.service.UserService;
 
 
 @ThreadSafe
@@ -15,9 +15,11 @@ import ru.job4j.todo.service.TaskService;
 public class TaskController {
 
     private final TaskService taskService;
+    private final UserService userService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, UserService userService) {
         this.taskService = taskService;
+        this.userService = userService;
     }
 
     @GetMapping
