@@ -24,7 +24,6 @@ public class HibTaskRepository implements TaskRepository {
      */
     public Optional<Task> save(Task task) {
         try {
-            task.setUser(sf.openSession().get(User.class, task.getUser().getId()));
             crudRepository.run(session -> session.persist(task));
         } catch (Exception exception) {
             return Optional.empty();
@@ -56,7 +55,6 @@ public class HibTaskRepository implements TaskRepository {
      */
     public boolean update(Task task) {
         try {
-            task.setUser(sf.openSession().get(User.class, task.getUser().getId()));
             crudRepository.run(session -> session.merge(task));
         } catch (Exception exception) {
             return false;
