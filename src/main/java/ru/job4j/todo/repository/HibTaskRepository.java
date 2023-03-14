@@ -1,8 +1,10 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import java.util.Collection;
 import java.util.Map;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class HibTaskRepository implements TaskRepository {
     private final CrudRepository crudRepository;
+    private final SessionFactory sf;
 
     /**
      * Сохранить в базе.
@@ -20,8 +23,8 @@ public class HibTaskRepository implements TaskRepository {
      * @return Optional of task.
      */
     public Optional<Task> save(Task task) {
-        System.out.println("REPO TASK: " + task);
         try {
+            task.setUser(sf.openSession().get(User.class, task.getUser().getId()));
             crudRepository.run(session -> session.persist(task));
         } catch (Exception exception) {
             return Optional.empty();
@@ -53,6 +56,7 @@ public class HibTaskRepository implements TaskRepository {
      */
     public boolean update(Task task) {
         try {
+            task.setUser(sf.openSession().get(User.class, task.getUser().getId()));
             crudRepository.run(session -> session.merge(task));
         } catch (Exception exception) {
             return false;
