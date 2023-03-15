@@ -42,12 +42,19 @@
         <form class="mt-3" th:action="@{/tasks/create}" method="post">
             <div class="mb-3">
                 <label for="description" class="form-label"><b>Описание</b></label>
-                <textarea class="form-control" id="description" name="description" rows="25"
+                <textarea class="form-control" id="description" name="description" rows="20"
                           placeholder="Опишите задание подробно"></textarea>
             </div>
             <div class="form-check mb-3">
                 <input type="checkbox" name="done" class="form-check-input" id="done">
                 <label class="form-check-label" for="done">Отметка о выполнении</label>
+            </div>
+            <div class="mb-3">
+                <label for="priority.id"><b>Приоритетность</b></label>
+                <select class="form-control" id="priority.id" name="priority.id">
+                    <option th:each="priority : ${priorities}" th:value="${priority.id}"
+                            th:text="${priority.name}"></option>
+                </select>
             </div>
             <div class="mb-3 row">
                 <div class="col-6"></div>

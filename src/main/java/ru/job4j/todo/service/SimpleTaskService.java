@@ -16,11 +16,9 @@ import java.util.Optional;
 public class SimpleTaskService implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserService userService;
 
-    public SimpleTaskService(TaskRepository hibTaskRepository, UserService userService) {
+    public SimpleTaskService(TaskRepository hibTaskRepository) {
         this.taskRepository = hibTaskRepository;
-        this.userService = userService;
     }
 
 
@@ -56,8 +54,7 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public Collection<Task> findAll() {
-        List<Task> tasks = (List<Task>) taskRepository.findAllOrderById();
-        return tasks;
+        return (List<Task>) taskRepository.findAll();
     }
 
     @Override

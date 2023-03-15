@@ -15,7 +15,7 @@ public interface TaskRepository {
 
     Optional<Task> findById(int id);
 
-    Collection<Task> findAllOrderById();
+    Collection<Task> findAll();
 
     Collection<Task> findAllTasksByExecutingStatus(boolean flag);
 

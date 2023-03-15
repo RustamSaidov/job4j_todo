@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
-import ru.job4j.todo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,16 +18,16 @@ import javax.servlet.http.HttpServletRequest;
 public class TaskController {
 
     private final TaskService taskService;
-    private final UserService userService;
+    private final PriorityService priorityService;
 
-    public TaskController(TaskService taskService, UserService userService) {
+    public TaskController(TaskService taskService, PriorityService priorityService) {
         this.taskService = taskService;
-        this.userService = userService;
+        this.priorityService = priorityService;
     }
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("tasksDTO", taskService.findAll());
+        model.addAttribute("tasks", taskService.findAll());
         return "tasks/list";
     }
 
@@ -56,6 +56,7 @@ public class TaskController {
 
     @GetMapping("/update_task/{id}")
     public String updateById(Model model, @PathVariable int id) {
+        model.addAttribute("priorities", priorityService.findAll());
         var taskOptional = taskService.findById(id);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
@@ -102,11 +103,13 @@ public class TaskController {
 
     @GetMapping("/create")
     public String getCreationPage(Model model) {
+        model.addAttribute("priorities", priorityService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute Task task, Model model, HttpServletRequest request) {
+
         try {
             User user = (User) request.getSession().getAttribute("user");
             task.setUser(user);

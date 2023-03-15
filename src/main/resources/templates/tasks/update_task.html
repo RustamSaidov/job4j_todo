@@ -54,20 +54,26 @@
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label"><b>Описание</b></label>
-                <textarea class="form-control" id="description" name="description" th:field="*{description}" rows="25"
+                <textarea class="form-control" id="description" name="description" th:field="*{description}" rows="20"
                           placeholder="Опишите задание подробно"></textarea>
             </div>
-            <div class="mb-3 row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <div class="row">
-                        <div class="col-4"><a class="btn btn-light w-100" th:href="@{/tasks}">Отмена</a></div>
-                        <div class="col-4">
-                            <button class="btn btn-success w-100" type="submit">Обновить</button>
+            <div class="mb-3">
+                <label for="priority.id"><b>Приоритетность</b></label>
+                <select class="form-control" id="priority.id" name="priority.id">
+                    <option th:each="priority : ${priorities}" th:value="${priority.id}"
+                            th:text="${priority.name}"></option>
+                </select>
+                <div class="mb-3 row">
+                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-4"><a class="btn btn-light w-100" th:href="@{/tasks}">Отмена</a></div>
+                            <div class="col-4">
+                                <button class="btn btn-success w-100" type="submit">Обновить</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
     </div>
 

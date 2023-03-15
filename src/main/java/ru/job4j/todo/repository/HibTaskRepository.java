@@ -1,10 +1,8 @@
 package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.model.User;
 
 import java.util.Collection;
 import java.util.Map;
@@ -14,7 +12,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class HibTaskRepository implements TaskRepository {
     private final CrudRepository crudRepository;
-    private final SessionFactory sf;
 
     /**
      * Сохранить в базе.
@@ -88,8 +85,9 @@ public class HibTaskRepository implements TaskRepository {
      * @return список заданий.
      */
     @Override
-    public Collection<Task> findAllOrderById() {
-        return crudRepository.query("from Task order by id asc", Task.class);
+    public Collection<Task> findAll() {
+        var list = crudRepository.query("FROM Task f JOIN FETCH f.priority ORDER BY f.id", Task.class);
+        return list;
     }
 
     /**
@@ -100,7 +98,7 @@ public class HibTaskRepository implements TaskRepository {
      */
     @Override
     public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
-        return crudRepository.query(String.format("from Task WHERE done is %s ORDER BY id", flag), Task.class);
+        return crudRepository.query(String.format("FROM Task f JOIN FETCH f.priority WHERE done is %s ORDER BY f.id", flag), Task.class);
     }
 
     /**
