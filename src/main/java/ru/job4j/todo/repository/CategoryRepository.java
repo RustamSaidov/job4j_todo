@@ -8,5 +8,4 @@ public interface CategoryRepository {
 
     Collection<Category> findAll();
 
-//    public Optional<List<Category>> findByTaskId(int id);
 }

@@ -16,9 +16,4 @@ public class HibGategoryRepository implements CategoryRepository {
         var list = crudRepository.query("FROM Category", Category.class);
         return list;
     }
-
-//    @Override
-//    public Optional<List<Category>> findByTaskId(int id) {
-//
-//    }
 }
