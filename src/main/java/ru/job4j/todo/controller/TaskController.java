@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
@@ -19,15 +20,19 @@ public class TaskController {
 
     private final TaskService taskService;
     private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
-    public TaskController(TaskService taskService, PriorityService priorityService) {
+    public TaskController(TaskService taskService, PriorityService priorityService, CategoryService categoryService) {
         this.taskService = taskService;
         this.priorityService = priorityService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
     public String getAll(Model model) {
-        model.addAttribute("tasks", taskService.findAll());
+        var tasks = taskService.findAll();
+        tasks.stream().forEach(x -> System.out.println("CONTROLLER: " + x));
+        model.addAttribute("tasks", tasks);
         return "tasks/list";
     }
 

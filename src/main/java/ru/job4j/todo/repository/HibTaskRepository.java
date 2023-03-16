@@ -86,7 +86,9 @@ public class HibTaskRepository implements TaskRepository {
      */
     @Override
     public Collection<Task> findAll() {
-        var list = crudRepository.query("FROM Task f JOIN FETCH f.priority ORDER BY f.id", Task.class);
+        var list = crudRepository.query("FROM Task f JOIN FETCH f.priority Left JOIN FETCH f.categories ORDER BY f.id", Task.class);
+        System.out.println(list);
+        list.stream().forEach(x -> System.out.println("REPO: " + x));
         return list;
     }
 
@@ -98,7 +100,7 @@ public class HibTaskRepository implements TaskRepository {
      */
     @Override
     public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
-        return crudRepository.query(String.format("FROM Task f JOIN FETCH f.priority WHERE done is %s ORDER BY f.id", flag), Task.class);
+        return crudRepository.query(String.format("FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories WHERE done is %s ORDER BY f.id", flag), Task.class);
     }
 
     /**

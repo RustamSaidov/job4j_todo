@@ -35,8 +35,8 @@ public class Task {
     @ManyToMany
     @JoinTable(
             name = "task_categories",
-            joinColumns = { @JoinColumn(name = "task_id") },
-            inverseJoinColumns = { @JoinColumn(name = "category_id") }
+            joinColumns = {@JoinColumn(name = "task_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
-    private List<Category> taskCategories = new ArrayList<>();
+    private List<Category> categories = new ArrayList<>();
 }
