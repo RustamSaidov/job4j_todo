@@ -1,9 +1,6 @@
 package ru.job4j.todo.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Table(name = "categories")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Category {
 
     @Id

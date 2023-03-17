@@ -11,6 +11,7 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 
 @ThreadSafe
@@ -62,6 +63,7 @@ public class TaskController {
     @GetMapping("/update_task/{id}")
     public String updateById(Model model, @PathVariable int id) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         var taskOptional = taskService.findById(id);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
@@ -109,12 +111,24 @@ public class TaskController {
     @GetMapping("/create")
     public String getCreationPage(Model model) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
     public String create(@ModelAttribute Task task, Model model, HttpServletRequest request) {
+        System.out.println("CREATE: " + task);
+        var categories = request.getParameterValues("categories");
+        System.out.println("WWWWWWWWWWWW: " +categories);
 
+//        String[] cats = request.getParameterValues("cat");
+//        Task task1 = new Task(1, description, done, user);
+//        Arrays.stream(cats).forEach(cat -> task1
+//                .getCategories()
+//                .add(categoryService
+//                        .findById(Integer.parseInt(cat))
+//                )
+//        );
         try {
             User user = (User) request.getSession().getAttribute("user");
             task.setUser(user);

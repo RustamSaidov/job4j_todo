@@ -3,13 +3,11 @@ package ru.job4j.todo.service;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
+import ru.job4j.todo.dto.TaskDTO;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @ThreadSafe
 @Service
@@ -55,10 +53,32 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Collection<Task> findAll() {
-        Collection<Task> tasks = (List<Task>) taskRepository.findAll();
+    public Collection<TaskDTO> findAll() {
+        List<Task> tasks = (List<Task>) taskRepository.findAll();
         tasks.stream().forEach(x -> System.out.println("SERVICE: " + x));
-        return tasks;
+        Collection<TaskDTO> tasksDTO = new ArrayList<>();
+        for (int i = 0; i < tasks.size(); i++) {
+            TaskDTO taskDTO = new TaskDTO(
+                    tasks.get(i).getId(),
+                    tasks.get(i).getDescription(),
+                    tasks.get(i).getCreated(),
+                    tasks.get(i).isDone(),
+                    tasks.get(i).getUser(),
+                    tasks.get(i).getPriority(),
+                    getStringFromCollection(tasks.get(i))
+            );
+            tasksDTO.add(taskDTO);
+        }
+        tasksDTO.stream().forEach(x -> System.out.println("SERVICE DTO: " + x));
+        return tasksDTO;
+    }
+
+    private String getStringFromCollection(Task task) {
+        StringJoiner stringJoiner = new StringJoiner(", ");
+        for (int i = 0; i < task.getCategories().size(); i++) {
+            stringJoiner.add(task.getCategories().get(i).getName());
+        }
+        return stringJoiner.toString();
     }
 
     @Override
