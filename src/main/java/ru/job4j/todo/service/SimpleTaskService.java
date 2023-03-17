@@ -3,7 +3,6 @@ package ru.job4j.todo.service;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
-import ru.job4j.todo.dto.TaskDTO;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
@@ -14,11 +13,9 @@ import java.util.*;
 public class SimpleTaskService implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final CategoryService categoryService;
 
     public SimpleTaskService(TaskRepository hibTaskRepository, CategoryService categoryService) {
         this.taskRepository = hibTaskRepository;
-        this.categoryService = categoryService;
     }
 
 
@@ -53,24 +50,9 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Collection<TaskDTO> findAll() {
+    public Collection<Task> findAll() {
         List<Task> tasks = (List<Task>) taskRepository.findAll();
-        tasks.stream().forEach(x -> System.out.println("SERVICE: " + x));
-        Collection<TaskDTO> tasksDTO = new ArrayList<>();
-        for (int i = 0; i < tasks.size(); i++) {
-            TaskDTO taskDTO = new TaskDTO(
-                    tasks.get(i).getId(),
-                    tasks.get(i).getDescription(),
-                    tasks.get(i).getCreated(),
-                    tasks.get(i).isDone(),
-                    tasks.get(i).getUser(),
-                    tasks.get(i).getPriority(),
-                    getStringFromCollection(tasks.get(i))
-            );
-            tasksDTO.add(taskDTO);
-        }
-        tasksDTO.stream().forEach(x -> System.out.println("SERVICE DTO: " + x));
-        return tasksDTO;
+        return tasks;
     }
 
     private String getStringFromCollection(Task task) {

@@ -7,6 +7,7 @@ import ru.job4j.todo.model.Task;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -86,10 +87,8 @@ public class HibTaskRepository implements TaskRepository {
      */
     @Override
     public Collection<Task> findAll() {
-        var list = crudRepository.query("FROM Task f JOIN FETCH f.priority Left JOIN FETCH f.categories ORDER BY f.id", Task.class);
-        System.out.println(list);
-        list.stream().forEach(x -> System.out.println("REPO: " + x));
-        return list;
+        var list = crudRepository.query("FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories ORDER BY f.id", Task.class);
+        return list.stream().distinct().collect(Collectors.toList());
     }
 
     /**
@@ -100,7 +99,8 @@ public class HibTaskRepository implements TaskRepository {
      */
     @Override
     public Collection<Task> findAllTasksByExecutingStatus(boolean flag) {
-        return crudRepository.query(String.format("FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories WHERE done is %s ORDER BY f.id", flag), Task.class);
+        var list = crudRepository.query(String.format("FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories WHERE done is %s ORDER BY f.id", flag), Task.class);
+        return list.stream().distinct().collect(Collectors.toList());
     }
 
     /**

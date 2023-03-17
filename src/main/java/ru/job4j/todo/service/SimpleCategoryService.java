@@ -20,6 +20,11 @@ public class SimpleCategoryService implements CategoryService {
 
     @Override
     public Collection<Category> findAll() {
-        return (List<Category>) categoryRepository.findAll();
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Collection<Category> findAllByIdList(List<Integer> catIds) {
+        return categoryRepository.findAllByIdList(catIds);
     }
 }

@@ -13,6 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
             integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
             crossorigin="anonymous"></script>
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-select-1.13.9/dist/css/bootstrap-select.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
 
     <title>Редактирование задания</title>
 </head>
@@ -64,8 +66,8 @@
                             th:text="${priority.name}"></option>
                 </select>
                 <div class="mb-3">
-                    <label for="category.id"><b>Категория</b></label>
-                    <select class="form-control" id="category.id" name="category.id" multiple>
+                    <label for="category"><b>Категории</b></label>
+                    <select class="form-control" id="category" name="category.id" multiple required>
                         <option th:each="category : ${categories}" th:value="${category.id}"
                                 th:text="${category.name}"></option>
                     </select>

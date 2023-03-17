@@ -70,14 +70,12 @@
                     <td th:text="${task.created}"/>
                     <td th:text="${task.user.name}"/>
                     <td th:text="${task.priority.name}"/>
-                    <td th:text="${task.categories}"/>
-                    <!--                    <td>-->
-                    <!--                        <span th:each="category : ${task.categories}">-->
-                    <!--                        <span th:text="${category.name}"></span><br>-->
-                    <!--                        </span>-->
-                    <!--                    </td>-->
-
-
+                    <!--                    <td th:text="${task.categories}"/>-->
+                    <td>
+                                            <span th:each="category : ${task.categories}">
+                                            <span th:text="${category.name}"></span><br>
+                                            </span>
+                    </td>
                 </tr>
                 </tbody>
             </table>
