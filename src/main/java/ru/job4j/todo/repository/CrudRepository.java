@@ -69,7 +69,12 @@ public class CrudRepository {
     }
 
     public <T> T tx(Function<Session, T> command) {
-        Session session = sf.openSession();
+        /*Timezone указан на уровне конфигурационного файла hibernate.cfg.xml  */
+        Session session = sf
+                .withOptions()
+                /*.jdbcTimeZone(TimeZone.getTimeZone("UTC"))*/
+                .openSession();
+
         Transaction tx = null;
         try {
             tx = session.beginTransaction();

@@ -12,7 +12,10 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZoneId;
+import java.util.Collection;
 import java.util.List;
+import java.util.TimeZone;
 
 
 @ThreadSafe
@@ -31,22 +34,40 @@ public class TaskController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpServletRequest request) {
         var tasks = taskService.findAll();
+        setTimeZoneOfTasksAccUserZone(request, tasks);
         model.addAttribute("tasks", tasks);
         return "tasks/list";
     }
 
     @GetMapping("/active")
-    public String getActiveTasks(Model model) {
-        model.addAttribute("active", taskService.findAllTasksByExecutingStatus(false));
+    public String getActiveTasks(Model model, HttpServletRequest request) {
+        var tasks = taskService.findAllTasksByExecutingStatus(false);
+        setTimeZoneOfTasksAccUserZone(request, tasks);
+        model.addAttribute("active", tasks);
         return "tasks/active";
     }
 
     @GetMapping("/completed")
-    public String getCompletedTasks(Model model) {
-        model.addAttribute("completed", taskService.findAllTasksByExecutingStatus(true));
+    public String getCompletedTasks(Model model, HttpServletRequest request) {
+        var tasks = taskService.findAllTasksByExecutingStatus(true);
+        setTimeZoneOfTasksAccUserZone(request, tasks);
+        model.addAttribute("completed", tasks);
         return "tasks/completed";
+    }
+
+    private void setTimeZoneOfTasksAccUserZone(HttpServletRequest request, Collection<Task> tasks) {
+        User user = (User) request.getSession().getAttribute("user");
+        for (Task task : tasks) {
+            if (user.getUserzone() == null) {
+                user.setUserzone(TimeZone.getDefault().getID());
+            }
+            var time = task.getCreated()
+                    .atZone(ZoneId.of("UTC"))
+                    .withZoneSameInstant(ZoneId.of(user.getUserzone())).toLocalDateTime();
+            task.setCreated(time);
+        }
     }
 
     @GetMapping("/{id}")
