@@ -8,7 +8,10 @@ import java.time.ZoneId;
 import java.util.Collection;
 import java.util.TimeZone;
 
-public class UtilClass {
+public final class UtilClass {
+
+    private UtilClass() {
+    }
 
     public static void setTimeZoneOfTasksAccUserZone(HttpServletRequest request, Collection<Task> tasks) {
         User user = (User) request.getSession().getAttribute("user");
