@@ -56,19 +56,6 @@ public class TaskController {
         return "tasks/completed";
     }
 
-//    private void setTimeZoneOfTasksAccUserZone(HttpServletRequest request, Collection<Task> tasks) {
-//        User user = (User) request.getSession().getAttribute("user");
-//        for (Task task : tasks) {
-//            if (user.getUserzone() == null) {
-//                user.setUserzone(TimeZone.getDefault().getID());
-//            }
-//            var time = task.getCreated()
-//                    .atZone(ZoneId.of("UTC"))
-//                    .withZoneSameInstant(ZoneId.of(user.getUserzone())).toLocalDateTime();
-//            task.setCreated(time);
-//        }
-//    }
-
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
         var taskOptional = taskService.findById(id);
