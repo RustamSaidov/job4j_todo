@@ -12,10 +12,9 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.ZoneId;
-import java.util.Collection;
 import java.util.List;
-import java.util.TimeZone;
+
+import static ru.job4j.todo.util.UtilClass.setTimeZoneOfTasksAccUserZone;
 
 
 @ThreadSafe
@@ -57,18 +56,18 @@ public class TaskController {
         return "tasks/completed";
     }
 
-    private void setTimeZoneOfTasksAccUserZone(HttpServletRequest request, Collection<Task> tasks) {
-        User user = (User) request.getSession().getAttribute("user");
-        for (Task task : tasks) {
-            if (user.getUserzone() == null) {
-                user.setUserzone(TimeZone.getDefault().getID());
-            }
-            var time = task.getCreated()
-                    .atZone(ZoneId.of("UTC"))
-                    .withZoneSameInstant(ZoneId.of(user.getUserzone())).toLocalDateTime();
-            task.setCreated(time);
-        }
-    }
+//    private void setTimeZoneOfTasksAccUserZone(HttpServletRequest request, Collection<Task> tasks) {
+//        User user = (User) request.getSession().getAttribute("user");
+//        for (Task task : tasks) {
+//            if (user.getUserzone() == null) {
+//                user.setUserzone(TimeZone.getDefault().getID());
+//            }
+//            var time = task.getCreated()
+//                    .atZone(ZoneId.of("UTC"))
+//                    .withZoneSameInstant(ZoneId.of(user.getUserzone())).toLocalDateTime();
+//            task.setCreated(time);
+//        }
+//    }
 
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
